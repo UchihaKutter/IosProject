@@ -73,7 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "http.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -95,7 +95,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "com.iosproject"
@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':jmessage-react-plugin')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
