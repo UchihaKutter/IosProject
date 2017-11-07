@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import {App} from './src/containers';
+import RootNavigator from './src/navigation';
 
-AppRegistry.registerComponent('IosProject', () => App);
+AppRegistry.registerComponent('IosProject', () => RootNavigator);

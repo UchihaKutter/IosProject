@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 import JMessage from 'jmessage-react-plugin';
 
+
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
   'Cmd+D or shake for dev menu',
@@ -24,36 +25,46 @@ export default class App extends Component<{}> {
   constructor() {
     super()
     // JMessage.init({
-    //   'appkey': 'c6ea313a86e699193578fd53',
-    //   'isOpenMessageRoaming': false, // 是否开启消息漫游，默认不开启
-    //   'isProduction': false, // 是否为生产模式
-    //   'channel': 'development-default'
+    //   appkey: 'c6ea313a86e699193578fd53',
+    //   isOpenMessageRoaming: false, // 是否开启消息漫游，默认不开启
+    //   isProduction: false, // 是否为生产模式
+    //   channel: 'development-default'
     // })
     JMessage.setDebugMode({ enable: true })
   }
 
   componentDidMount() {
-    // JMessage.register({
-    //   username: '登录用户名',
-    //   password: '登录密码'
-    // }, () => {
-    //   console.log('/*注册成功回调*/')
-    // }, (error) => {
-    //   console.log('/*注册失败回调*/', error)
-    // })
+  }
+
+  submitRegister =()=> {
+    JMessage.register({
+      username: '15880133505',
+      password: '123456'
+    }, () => {
+      console.log('/*注册成功回调*/')
+    }, (error) => {
+      console.log('/*注册失败回调*/', error)
+    })
   }
 
   submitLogin =()=> {
-    // JMessage.login({
-    //   username: '登录用户名',
-    //   password: '登录密码'
-    // }, () => {
-    //   console.log('/*登录成功回调*/')
-    // }, (error) => {
-    //   console.log('/*登录失败回调*/', error)
-    // })
+    JMessage.login({
+      username: '15880133505',
+      password: '123456'
+    }, () => {
+      console.log('/*登录成功回调*/')
+    }, (error) => {
+      console.log('/*登录失败回调*/', error)
+    })
   }
+
+  gotoChatDetail =(navigation)=> {
+    navigation.navigate('ChatDetail')
+    console.log('navigation', navigation)
+  }
+
   render() {
+    const { navigation } = this.props
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -66,8 +77,14 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions}>
           {instructions}
         </Text>
+        <Text style={styles.instructions} onPress={this.submitRegister}>
+          注册
+        </Text>
         <Text style={styles.instructions} onPress={this.submitLogin}>
-          {instructions}
+          登录
+        </Text>
+        <Text style={styles.instructions} onPress={()=>this.gotoChatDetail(navigation)}>
+          聊天sss
         </Text>
       </View>
     )
@@ -89,6 +106,7 @@ const styles = StyleSheet.create({
   instructions: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5
+    marginBottom: 20,
+    fontSize:30
   }
 })
