@@ -27,7 +27,7 @@ export default class ChatDetail extends Component<{}> {
     this.state = {
       // single: this.props.groupId === "",
       groupNum: '(1)',
-      inputContent: '',
+      inputContent: 'first',
       recordText: '按住 说话',
       menuContainerHeight: 1000,
       chatInputStyle: {
@@ -53,9 +53,10 @@ export default class ChatDetail extends Component<{}> {
     this.onSwitchToMicrophoneMode = this.onSwitchToMicrophoneMode.bind(this);
     this.onSwitchToGalleryMode = this.onSwitchToGalleryMode.bind(this);
     this.onSwitchToCameraMode = this.onSwitchToCameraMode.bind(this);
-    // this.onTouchEditText = this.onTouchEditText.bind(this);
-    // this.onPullToRefresh = this.onPullToRefresh.bind(this);
-    // this.onFullScreen = this.onFullScreen.bind(this);
+    this.onSwitchToEmojiMode = this.onSwitchToEmojiMode.bind(this);
+    this.onTouchEditText = this.onTouchEditText.bind(this);
+    this.onPullToRefresh = this.onPullToRefresh.bind(this);
+    this.onFullScreen = this.onFullScreen.bind(this);
   }
 
   onMsgClick (message) {
@@ -129,6 +130,17 @@ export default class ChatDetail extends Component<{}> {
 
   onSendText (text) {
     console.log("will send text: " + text);
+    JMessage.sendTextMessage({ type: 'single', username: '15880133505',
+        text: 'hello world', },
+      (msg) => {
+      console.log('sendTextMessage', msg)
+        // do something.
+
+      }, (error) => {
+      console.log('sendTextMessage error', error)
+        var code = error.code
+        var desc = error.description
+      })
     let messages = [{
       msgId: "1",
       status: "send_going",
@@ -138,7 +150,7 @@ export default class ChatDetail extends Component<{}> {
       fromUser: {
         userId: "1",
         displayName: "Ken",
-        avatarPath: "ironman"
+        avatarPath: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1510139989096&di=8abc00e961bc38c684126a93962662d7&imgtype=0&src=http%3A%2F%2Fwww.haha365.com%2Fuploadfile%2F2014%2F0404%2F20140404063425613.jpg"
       },
       timeString: "10:00",
     }];
@@ -346,14 +358,43 @@ export default class ChatDetail extends Component<{}> {
     });
   }
 
-  onTouchEditText =()=> {
+  onSwitchToEmojiMode() {
+    console.log("switch to emoji mode");
+    AuroraIMUIController.scrollToBottom(true);
+    // try {
+    //   const granted = await PermissionsAndroid.request(
+    //     PermissionsAndroid.PERMISSIONS.CAMERA, {
+    //       'title': 'IMUI needs Camera Permission',
+    //       'message': 'IMUI needs access to your camera ' +
+    //       'so you can take awesome pictures.'
+    //     }
+    //   )
+    //   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    //     console.log("You can use the camera")
+    //   } else {
+    //     console.log("Camera permission denied")
+    //   }
+    // } catch (err) {
+    //   console.warn(err)
+    // }
+    this.setState({
+      chatInputStyle: {
+        width: Dimensions.get('window').width,
+        height: 420
+      },
+      menuContainerHeight: 850,
+    });
+  }
+
+  onTouchEditText () {
     console.log("will scroll to bottom");
     AuroraIMUIController.scrollToBottom(true);
   }
 
-  onFullScreen =()=> {
+  onFullScreen () {
     this.setState({
-      menuContainerHeight: 1920
+      // menuContainerHeight: 1920
+      menuContainerHeight: Dimensions.get('window').height
     });
     console.log("Set screen height to full screen");
   }
@@ -378,6 +419,10 @@ export default class ChatDetail extends Component<{}> {
           sendBubblePressedColor = {'#dddddd'}
           eventMsgTxtColor = {'#ffffff'}
           eventMsgTxtSize = {16}
+          isShowDisplayName = {true}
+          // isShowIncomingDisplayName = {false}
+          // isShowOutgoingDisplayName = {false}
+          // isAllowPullToRefresh = {false}
         />
         <ChatInput
           style = {this.state.chatInputStyle}
@@ -395,6 +440,7 @@ export default class ChatDetail extends Component<{}> {
           onSwitchToMicrophoneMode = {this.onSwitchToMicrophoneMode}
           onSwitchToGalleryMode = {this.onSwitchToGalleryMode}
           onSwitchToCameraMode = {this.onSwitchToCameraMode}
+          onSwitchToEmojiMode = {this.onSwitchToEmojiMode}
           onTouchEditText = {this.onTouchEditText}
           onFullScreen = {this.onFullScreen}
         />

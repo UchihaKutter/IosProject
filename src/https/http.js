@@ -43,7 +43,7 @@ axios.interceptors.response.use(function (response) {
     }
     else if (response.data.code === 300) {
       // Toast.fail(response.data.msg, toastDuratoin)
-      // Cache.remove('user')
+      // Cache.remove('user.js')
       !Dialog.isShowing() && Dialog.showAlert()
       return Promise.reject(response.data.msg)
     }

@@ -1,0 +1,19 @@
+<svg id="福州本地系列" xmlns="http://www.w3.org/2000/svg" width="32.844" height="28.91" viewBox="0 0 32.844 28.91">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-width: 2px;
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #198cff;
+      }
+    </style>
+  </defs>
+  <path id="矩形_824" data-name="矩形 824" class="cls-1" d="M787,1428h-1a6.626,6.626,0,0,1-1-.09V1433h-0.586L781,1436.41V1437h-3v6h-2v-8h3.586l3.414-3.41v-4.3c-4.685-2.13-7.8-8.45-7.8-8.45a8.783,8.783,0,0,0-7.428,0c-1.5,3.98-3.063,6.18-4.77,7.38V1431h-2v-3.79a7.16,7.16,0,0,0-1.734.79H759s-4.423-.92,0-2c3.006-.74,5.551-3.2,8-9a11.81,11.81,0,0,1,9,0s3.351,8.98,11,9C788.933,1426,787,1428,787,1428Zm-23,6h2v3h3v-3h2v5H761v-2h3v-3Z" transform="translate(-756.031 -1415.09)"/>
+  <circle id="椭圆_40" data-name="椭圆 40" class="cls-2" cx="15.969" cy="8.91" r="3"/>
+</svg>

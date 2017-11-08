@@ -9,9 +9,11 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Image
 } from 'react-native'
 import JMessage from 'jmessage-react-plugin';
+import {friendList} from '../../stores'
 
 
 const instructions = Platform.select({
@@ -34,6 +36,7 @@ export default class App extends Component<{}> {
   }
 
   componentDidMount() {
+    friendList.getList().then()
   }
 
   submitRegister =()=> {
@@ -80,12 +83,13 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions} onPress={this.submitRegister}>
           注册
         </Text>
-        <Text style={styles.instructions} onPress={this.submitLogin}>
-          登录
-        </Text>
+        {/*<Text style={styles.instructions} onPress={this.submitLogin}>*/}
+          {/*登录*/}
+        {/*</Text>*/}
         <Text style={styles.instructions} onPress={()=>this.gotoChatDetail(navigation)}>
           聊天sss
         </Text>
+        {/*<Image style={{height:20, width:20}} source={{uri:'http://www.w3.org/2000/svg'}}></Image>*/}
       </View>
     )
   }
