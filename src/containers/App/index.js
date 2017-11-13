@@ -6,23 +6,17 @@
 
 import React, { Component } from 'react'
 import {
-  Platform,
+  // Platform,
   StyleSheet,
   Text,
-  View,
-  Image
+  View
+  // Image
 } from 'react-native'
 import JMessage from 'jmessage-react-plugin';
-import {friendList} from '../../stores'
+import store from '../../stores'
+import {inject, observer} from 'mobx-react'
 
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-  'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-  'Shake or press menu button for dev menu'
-})
-
+@inject('store') @observer
 export default class App extends Component<{}> {
   constructor() {
     super()
@@ -33,10 +27,21 @@ export default class App extends Component<{}> {
     //   channel: 'development-default'
     // })
     JMessage.setDebugMode({ enable: true })
+    JMessage.login({
+      username: '15880133505',
+      password: '123456'
+    }, () => {
+      console.log('/*登录成功回调*/')
+    }, (error) => {
+      console.log('/*登录失败回调*/', error)
+    })
   }
 
   componentDidMount() {
-    friendList.getList().then()
+    // store.friendList.getList().then(v=>{
+    //   console.log(v)
+    //   console.log(store.friendList.list)
+    // })
   }
 
   submitRegister =()=> {
@@ -66,30 +71,36 @@ export default class App extends Component<{}> {
     console.log('navigation', navigation)
   }
 
+  gotoGiftChatDetail = (navigation) => {
+    navigation.navigate('GiftChatDetail')
+  }
+
+  getFriendList = () => {
+    store.friendList.getList().then(v => {
+      console.log(v)
+      console.log(store.friendList.list)
+    })
+  }
+
   render() {
     const { navigation } = this.props
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!dddddssss
-
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
         <Text style={styles.instructions} onPress={this.submitRegister}>
           注册
         </Text>
-        {/*<Text style={styles.instructions} onPress={this.submitLogin}>*/}
-          {/*登录*/}
-        {/*</Text>*/}
+        <Text style={styles.instructions} onPress={this.submitLogin}>
+          登录
+        </Text>
         <Text style={styles.instructions} onPress={()=>this.gotoChatDetail(navigation)}>
           聊天sss
         </Text>
-        {/*<Image style={{height:20, width:20}} source={{uri:'http://www.w3.org/2000/svg'}}></Image>*/}
+        <Text style={styles.instructions} onPress={() => this.gotoGiftChatDetail(navigation)}>
+          聊天giftChat
+        </Text>
+        <Text style={styles.instructions} onPress={() => this.getFriendList()}>
+          获取朋友列表
+        </Text>
       </View>
     )
   }

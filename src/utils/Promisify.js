@@ -1,6 +1,3 @@
-import { AppRegistry } from 'react-native';
-import RootNavigator from './src/navigation';
-
 global.Promisify = (fn, receiver) => {
   return (...args) => {
     return new Promise((resolve, reject) => {
@@ -14,4 +11,4 @@ global.Promisify = (fn, receiver) => {
   }
 }
 
-AppRegistry.registerComponent('IosProject', () => RootNavigator);
+// export default Promisify

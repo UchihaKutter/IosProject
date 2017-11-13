@@ -1,8 +1,11 @@
 import {observable} from 'mobx'
 import JMessage from 'jmessage-react-plugin';
-const Promiset = require('bluebird');
+// import Promise from 'bluebird';
+import PageList from '../utils/PageList'
 
-class User {
+// import Promisify from '../utils/Promisify'
+
+class FriendList extends PageList {
   @observable
   username  // : string,           // 用户名
   appKey  // : string,             // 用户所属应用的 appKey，可与 username 共同作为用户的唯一标识
@@ -23,7 +26,8 @@ class User {
   isFriend  // :boolean            // 是否为好友
 
   async getList() {
-    const res = await Promiset.promisify(JMessage.getFriends)
+    const getFriends = Promisify(JMessage.getFriends)
+    const res = await getFriends()
     if(res) {
       this.list = res
       console.log(this.list)
@@ -40,5 +44,5 @@ class User {
   }
 }
 
-const self = new User()
+const self = new FriendList()
 export default self

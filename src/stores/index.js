@@ -1,7 +1,8 @@
 import friendList from './friendList'
+import conversationList from './conversationList'
 
-const Index = {
-  friendList
+const store = {
+  friendList,
+  conversationList
 }
-
-export default Index
+export default store
