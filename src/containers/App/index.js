@@ -16,7 +16,11 @@ import JMessage from 'jmessage-react-plugin';
 import store from '../../stores'
 import {inject, observer} from 'mobx-react'
 
-@inject('store') @observer
+@inject(stores => ({
+  user: stores.user,
+  conversationList: stores.conversationList
+}))
+@observer
 export default class App extends Component<{}> {
   constructor() {
     super()
@@ -27,14 +31,6 @@ export default class App extends Component<{}> {
     //   channel: 'development-default'
     // })
     JMessage.setDebugMode({ enable: true })
-    JMessage.login({
-      username: '15880133505',
-      password: '123456'
-    }, () => {
-      console.log('/*登录成功回调*/')
-    }, (error) => {
-      console.log('/*登录失败回调*/', error)
-    })
   }
 
   componentDidMount() {
@@ -56,14 +52,7 @@ export default class App extends Component<{}> {
   }
 
   submitLogin =()=> {
-    JMessage.login({
-      username: '15880133505',
-      password: '123456'
-    }, () => {
-      console.log('/*登录成功回调*/')
-    }, (error) => {
-      console.log('/*登录失败回调*/', error)
-    })
+    this.props.user.login().then()
   }
 
   gotoChatDetail =(navigation)=> {
@@ -76,9 +65,9 @@ export default class App extends Component<{}> {
   }
 
   getFriendList = () => {
-    store.friendList.getList().then(v => {
+    this.props.conversationList.getList().then(v => {
       console.log(v)
-      console.log(store.friendList.list)
+      console.log(this.props.conversationList.list)
     })
   }
 
@@ -122,6 +111,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 20,
-    fontSize:30
+    fontSize: 30
   }
 })

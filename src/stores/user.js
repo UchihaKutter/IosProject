@@ -1,10 +1,15 @@
-import {observable, autorunAsync} from 'mobx'
+import {observable, autorunAsync, computed} from 'mobx'
 import JMessage from 'jmessage-react-plugin'
 import Storage from '../utils/Storage'
+import validate from 'mobx-form-validate'
 
 class User {
   @observable
-  username // : string,           // 用户名
+  @validate(/^.+$/, 'Please enter any password')
+  password = '123456'
+  @observable
+  @validate(/^.+$/, 'Please enter any password')
+  username = '15880133505' // : string,           // 用户名
   appKey // : string,             // 用户所属应用的 appKey，可与 username 共同作为用户的唯一标识
   @observable
   nickname // : string,           // 昵称
@@ -24,9 +29,21 @@ class User {
 
   async login() {
     const tran = Promisify(JMessage.login)
+    const res = tran({username: this.username, password: this.password})
+    if (res) {
+      await this.getMyInfo()
+    }
+    return res
+  }
+
+  async getMyInfo() {
+    JMessage.logout()
+    const tran = Promisify(JMessage.getMyInfo)
     const res = tran()
     if (res) {
+      console.log('res', res)
       this.user = res
+      console.log('user', this.user.username)
       autorunAsync(() => {
         Storage.save('user', res)
       }, 500)
@@ -36,9 +53,15 @@ class User {
 
   isLogin = () => {
     const userInfo = Storage.get('user')
+    console.log('userInfo', userInfo)
     if (userInfo === false) {
       return false
     }
+    return true
+  }
+
+  @computed
+  get isValid() {
     return true
   }
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import {FlatList, RefreshControl} from 'react-native'
-import LoadMore from './LoadMore'
 import {observer} from 'mobx-react/native'
 
 @observer
@@ -39,7 +38,7 @@ class Comp extends React.Component {
           refreshControl={this.renderRefreshControl()}
           {...this.props}
         />
-        <LoadMore store={this.store}/>
+        {/* <LoadMore store={this.store}/>*/}
       </View>
     )
   }

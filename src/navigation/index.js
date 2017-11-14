@@ -2,7 +2,7 @@ import { StackNavigator } from 'react-navigation';
 import {Provider} from 'mobx-react'
 import {
   App as HomeScreen, ChatDetail as ChatDetailScreen, GiftChatDetail as GiftChatDetailScreen,
-  LoginScreen
+  Login as LoginScreen
 } from '../containers'
 import store from '../stores'
 import React from 'react'
@@ -38,7 +38,7 @@ import React from 'react'
 class Root extends React.Component {
   render() {
     return (
-      <Provider store={store}>
+      <Provider {...store}>
         <RootNavigator/>
       </Provider>
     )

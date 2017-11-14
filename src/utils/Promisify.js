@@ -1,4 +1,5 @@
-global.Promisify = (fn, receiver) => {
+// callback promise 化
+const Promisify = (fn, receiver) => {
   return (...args) => {
     return new Promise((resolve, reject) => {
       fn.apply(receiver, [...args, res => {
@@ -11,4 +12,4 @@ global.Promisify = (fn, receiver) => {
   }
 }
 
-// export default Promisify
+export default Promisify
