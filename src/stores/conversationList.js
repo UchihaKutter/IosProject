@@ -8,7 +8,7 @@ class FriendList extends PageList {
     const res = await getConversations()
     if (res) {
       this.list = res
-      console.log('this.list', this.list)
+      console.log('this.list11111', this.list)
     }
     return res
   }
