@@ -20,17 +20,10 @@ import {Icon} from '../../components'
 const {FontAwesomeIcon} = Icon
 @inject(stores => ({
   user: stores.user,
-  conversationList: stores.conversationList
+  friendList: stores.friendList
 }))
 @observer
 export default class Page extends Component {
-
-  // data={name: '打开看',date: 170502,lastMsg: 12};
-  //
-  //
-  //
-  // msgListData=[{photo:null, name:'打开看',date:170503,lastMsg:12},{photo:null,name:'打开看',date:170502,lastMsg:12},
-  //   {photo:null, name:'打开看',date:170501,lastMsg:12},{photo:null, name:'打开看',date:170502,lastMsg:12}];
 
   // 初始化模拟数据
   constructor(props) {
@@ -39,7 +32,7 @@ export default class Page extends Component {
   }
 
   componentDidMount() {
-    this.props.conversationList.getList().then()
+    this.props.friendList.getList().then()
   }
 
   gotoChatDetail = () => {
@@ -47,7 +40,11 @@ export default class Page extends Component {
   }
 
   renderItem = ({index, item}) => {
-    const {avatarThumbPath, noteName} = item
+    const {target, conversationType, title, latestMessage, unreadCount} = item
+    const avatarThumbPath = conversationType === 'single' ? target.avatarThumbPath : ''
+    // if(conversationType === 'single') {
+    //   const {avatarThumbPath} = target
+    // }
     const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
       : <Image style={[styles.image]} source={{uri: avatarThumbPath}}/>
     return (
@@ -55,10 +52,10 @@ export default class Page extends Component {
         {icon}
         <View style={styles.content_item_container}>
           <View style={styles.detail_container}>
-            <Text style={styles.text_title}>{noteName}</Text>
-            <Text style={styles.text_date}>{noteName}</Text>
+            <Text style={styles.text_title}>{title}</Text>
+            <Text style={styles.text_date}>{unreadCount}</Text>
           </View>
-          <Text style={styles.text_content}>{noteName}</Text>
+          <Text style={styles.text_content}>{latestMessage}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -68,7 +65,7 @@ export default class Page extends Component {
     return (
       <PageList
         renderItem={this.renderItem}
-        store={this.props.conversationList}
+        store={this.props.friendList}
       />
 
     )

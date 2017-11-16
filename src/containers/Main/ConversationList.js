@@ -4,7 +4,7 @@
  * @flow
  */
 
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   // Platform,
   StyleSheet,
@@ -12,8 +12,15 @@ import {
   View
   // Image
 } from 'react-native'
-import JMessage from 'jmessage-react-plugin';
+import JMessage from 'jmessage-react-plugin'
+import store from '../../stores'
+import {inject, observer} from 'mobx-react'
 
+@inject(stores => ({
+  user: stores.user,
+  conversationList: stores.conversationList
+}))
+@observer
 export default class App extends Component<{}> {
   constructor() {
     super()
@@ -23,7 +30,7 @@ export default class App extends Component<{}> {
     //   isProduction: false, // 是否为生产模式
     //   channel: 'development-default'
     // })
-    JMessage.setDebugMode({ enable: true })
+    JMessage.setDebugMode({enable: true})
   }
 
   componentDidMount() {
@@ -33,7 +40,7 @@ export default class App extends Component<{}> {
     // })
   }
 
-  submitRegister =()=> {
+  submitRegister = () => {
     JMessage.register({
       username: '15880133505',
       password: '123456'
@@ -44,11 +51,11 @@ export default class App extends Component<{}> {
     })
   }
 
-  submitLogin =()=> {
+  submitLogin = () => {
     this.props.user.login().then()
   }
 
-  gotoChatDetail =(navigation)=> {
+  gotoChatDetail = (navigation) => {
     navigation.navigate('ChatDetail')
     console.log('navigation', navigation)
   }
@@ -65,7 +72,7 @@ export default class App extends Component<{}> {
   }
 
   render() {
-    const { navigation } = this.props
+    const {navigation} = this.props
     return (
       <View style={styles.container}>
         <Text style={styles.instructions} onPress={this.submitRegister}>
@@ -74,7 +81,7 @@ export default class App extends Component<{}> {
         <Text style={styles.instructions} onPress={this.submitLogin}>
           登录
         </Text>
-        <Text style={styles.instructions} onPress={()=>this.gotoChatDetail(navigation)}>
+        <Text style={styles.instructions} onPress={() => this.gotoChatDetail(navigation)}>
           聊天sss
         </Text>
         <Text style={styles.instructions} onPress={() => this.gotoGiftChatDetail(navigation)}>

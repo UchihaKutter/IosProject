@@ -14,10 +14,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'gray',
     marginVertical: 5,
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 50
   },
   active: {
-    backgroundColor: '#db2f37'
+    backgroundColor: '#198cff'
   }
 })
 
@@ -41,7 +42,7 @@ export default class Submit extends Component {
         disabled={!form.isValid}
         onPress={onSubmit}
       >
-        <Text>{children}</Text>
+        <Text style={{color: '#ffffff', fontSize: 18}}>{children}</Text>
       </TouchableOpacity>
     )
   }

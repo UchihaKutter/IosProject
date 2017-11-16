@@ -34,14 +34,14 @@ export default class Page extends React.Component {
 
   render() {
     const {user} = this.props
-    console.log('user', user)
     return (
       <View style={styles.container}>
         <FormProvider form={user}>
           <View style={styles.formContainer}>
-            <FormItem name="username" underlineColorAndroid="transparent">Mobile</FormItem>
-            <FormItem propsOfTextInput={{secureTextEntry: true}} name="password">Password</FormItem>
-            <Submit onSubmit={this.onClickLogin}>Login</Submit>
+            <FormItem name="username" placeholder='手机号' propsOfTextInput={{keyboard: 'numeric'}}>Mobile</FormItem>
+            <FormItem propsOfTextInput={{keyboardType: 'numeric'}} placeholder='密码'
+                      name="password" showPwd={true} hasRightView={true}>Password</FormItem>
+            <Submit onSubmit={this.onClickLogin}>登录</Submit>
           </View>
         </FormProvider>
       </View>
@@ -61,13 +61,12 @@ export default class Page extends React.Component {
 const styles = StyleSheet.create({
 
   container: {
-
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   formContainer: {
-    height: 600,
     width: '80%'
   },
 

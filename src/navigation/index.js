@@ -1,10 +1,11 @@
-import { StackNavigator } from 'react-navigation';
+import {StackNavigator, TabNavigator} from 'react-navigation'
 import {Provider} from 'mobx-react'
 import {
-  App as HomeScreen, ChatDetail as ChatDetailScreen, GiftChatDetail as GiftChatDetailScreen,
-  Login as LoginScreen
+  ChatDetail as ChatDetailScreen, GiftChatDetail as GiftChatDetailScreen,
+  Login as LoginScreen, ChatList, Account, AccountSeting
 } from '../containers'
 import store from '../stores'
+import Storage from '../utils/Storage'
 import React from 'react'
 
 // const AppNavigator = StackNavigator(AppRouteConfigs);
@@ -36,6 +37,9 @@ import React from 'react'
 // }
 
 class Root extends React.Component {
+  constructor() {
+    super()
+  }
   render() {
     return (
       <Provider {...store}>
@@ -45,9 +49,19 @@ class Root extends React.Component {
   }
 }
 
+const MainScreenNavigator = TabNavigator({
+  ConversationList: {screen: ChatList},
+  FriendList: {screen: ChatList},
+  Account: {screen: Account}
+})
+
+// store.user.isLogin() ? 'Home' :
 const RootNavigator = StackNavigator({
   Home: {
-    screen: HomeScreen,
+    screen: MainScreenNavigator,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
   },
   ChatDetail: {
     screen: ChatDetailScreen,
@@ -57,7 +71,10 @@ const RootNavigator = StackNavigator({
   },
   Login: {
     screen: LoginScreen
+  },
+  AccountSeting: {
+    screen: AccountSeting
   }
-}, {initialRouteName: store.user.isLogin() ? 'Home' : 'Login'});
+}, {initialRouteName: 'Login'});
 
 export default Root

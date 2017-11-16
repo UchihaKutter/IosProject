@@ -5,7 +5,7 @@ import validate from 'mobx-form-validate'
 
 class User {
   @observable
-  @validate(/^.+$/, 'Please enter any password')
+  @validate(/\d{6}$/, 'Please enter any password')
   password = '123456'
   @observable
   @validate(/^.+$/, 'Please enter any password')
@@ -27,42 +27,49 @@ class User {
   isInBlackList // : boolean,     // 是否在黑名单中
   isFriend // :boolean            // 是否为好友
 
+  constructor() {
+    this.init()
+  }
+
+  async init() {
+    this.userInfo = await Storage.getText('user')
+    console.log('init: this.userInfo ', this.userInfo)
+  }
+
   async login() {
     const tran = Promisify(JMessage.login)
-    const res = tran({username: this.username, password: this.password})
-    if (res) {
+    const res = await tran({username: this.username, password: this.password})
+    console.log(res)
+    if (res || res === 0) {
       await this.getMyInfo()
     }
     return res
   }
 
   async getMyInfo() {
-    JMessage.logout()
     const tran = Promisify(JMessage.getMyInfo)
-    const res = tran()
+    const res = await tran()
     if (res) {
       console.log('res', res)
-      this.user = res
-      console.log('user', this.user.username)
-      autorunAsync(() => {
-        Storage.save('user', res)
-      }, 500)
+      this.userInfo = res
+      Storage.saveText('user', res)
+      // console.log('user', this.userInfo.username)
     }
     return res
   }
 
-  isLogin = () => {
-    const userInfo = Storage.get('user')
-    console.log('userInfo', userInfo)
-    if (userInfo === false) {
-      return false
+  async isLogin() {
+    const res = await Storage.getText('user')
+    console.log('userInfo', res)
+    if (res) {
+      return true
     }
-    return true
+    return false
   }
 
   @computed
   get isValid() {
-    return true
+    return !this.validateError
   }
 }
 

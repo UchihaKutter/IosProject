@@ -141,6 +141,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':jmessage-react-plugin')
     compile project(':jcore-react-native')
     compile project(':aurora-imui-react-native')
