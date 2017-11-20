@@ -5,12 +5,13 @@ import {
   View,
   TouchableOpacity
 } from 'react-native'
+import {observer} from 'mobx-react'
 
+@observer
 export default class Com extends Component {
 
   static defaultProps = {
     enable: true,
-    color: _styles.primeColor,
     fontSize: 18
   }
 
@@ -28,6 +29,7 @@ export default class Com extends Component {
   }
 
   clickFun = async () => {
+    console.log('clickFun begin')
     this.props.onPress && this.props.onPress()
     await this.setState({enable: false})// 防重复点击
     this.timer = setTimeout(async () => {
@@ -36,13 +38,15 @@ export default class Com extends Component {
   }
 
   render() {
-    const {color, fontSize, children, enable, textStyle} = this.props
+    let {color, fontSize, children, enable, textStyle} = this.props
     const clickEnable = this.state.enable
+    console.log(this.props.onPress)
+    console.log('enable: ', enable, 'clickEnable: ', clickEnable)
     return (
       <TouchableOpacity
-        style={[styles.button, this.props.style, enable && styles.buttonUnable]}
-        onPress={enable && clickEnable && this.clickFun}>
-        <Text style={[styles.buttonText, {color: color, fontSize: fontSize}, textStyle]}>{children}</Text>
+        style={[styles.button, {backgroundColor: _styles.primeColor}, this.props.style, !enable && styles.buttonUnable]}
+        onPress={this.clickFun}>
+        <Text style={[styles.buttonText, textStyle]}>{children}</Text>
       </TouchableOpacity>
     )
   }
@@ -52,7 +56,7 @@ export default class Com extends Component {
 const styles = StyleSheet.create({
 
   buttonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 18,
     paddingLeft: 15,
     paddingRight: 15
@@ -61,10 +65,10 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: '#458bfb',
-    height: 42,
-    width: '80%',
+    alignSelf: 'center',
+    // borderRadius: 20,
+    height: 50,
+    width: '100%',
     flexDirection: 'row'
   },
   buttonUnable: {

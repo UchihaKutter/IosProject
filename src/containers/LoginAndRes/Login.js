@@ -41,7 +41,7 @@ export default class Page extends React.Component {
             <FormItem name="username" placeholder='手机号' propsOfTextInput={{keyboard: 'numeric'}}>Mobile</FormItem>
             <FormItem propsOfTextInput={{keyboardType: 'numeric'}} placeholder='密码'
                       name="password" showPwd={true} hasRightView={true}>Password</FormItem>
-            <Submit onSubmit={this.onClickLogin}>登录</Submit>
+            <Submit name='login' onSubmit={this.onClickLogin}>登录</Submit>
           </View>
         </FormProvider>
       </View>

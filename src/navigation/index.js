@@ -2,11 +2,16 @@ import {StackNavigator, TabNavigator} from 'react-navigation'
 import {Provider} from 'mobx-react'
 import {
   ChatDetail as ChatDetailScreen, GiftChatDetail as GiftChatDetailScreen,
-  Login as LoginScreen, ChatList, Account, AccountSeting
+  Login as LoginScreen, ChatList, Account
 } from '../containers'
 import store from '../stores'
 import Storage from '../utils/Storage'
 import React from 'react'
+
+const {
+  AccountInfo,
+  AccountModify
+} = Account
 
 // const AppNavigator = StackNavigator(AppRouteConfigs);
 
@@ -52,7 +57,7 @@ class Root extends React.Component {
 const MainScreenNavigator = TabNavigator({
   ConversationList: {screen: ChatList},
   FriendList: {screen: ChatList},
-  Account: {screen: Account}
+  AccountInfo: {screen: AccountInfo}
 })
 
 // store.user.isLogin() ? 'Home' :
@@ -72,8 +77,8 @@ const RootNavigator = StackNavigator({
   Login: {
     screen: LoginScreen
   },
-  AccountSeting: {
-    screen: AccountSeting
+  AccountModify: {
+    screen: AccountModify
   }
 }, {initialRouteName: 'Login'});
 

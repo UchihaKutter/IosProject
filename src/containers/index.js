@@ -4,7 +4,6 @@ import GiftChatDetail from './GiftChatDetail'
 import Login from './LoginAndRes/Login'
 import ChatList from './ChatList'
 import Account from './Account'
-
 export {
   App,
   ChatDetail,

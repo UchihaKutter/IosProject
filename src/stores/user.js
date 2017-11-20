@@ -8,10 +8,11 @@ class User {
   @validate(/\d{6}$/, 'Please enter any password')
   password = '123456'
   @observable
-  @validate(/^.+$/, 'Please enter any password')
+  @validate(/\d{11}$/, 'Please enter any password')
   username = '15880133505' // : string,           // 用户名
   appKey // : string,             // 用户所属应用的 appKey，可与 username 共同作为用户的唯一标识
   @observable
+  @validate(/\d{2}$/, 'Please enter any password')
   nickname // : string,           // 昵称
   @observable
   gender // : string,             // 'male' / 'female' / 'unknown'
@@ -67,9 +68,43 @@ class User {
     return false
   }
 
+  async updateMyInfo(info) {
+    console.log('updateMyInfo begin')
+    console.log(info)
+    const tran = Promisify(JMessage.updateMyInfo)
+    const res = await tran(info)
+    if (res) {
+      console.log('updateMyInfo success')
+    }
+    return res
+  }
+
+  async updateMyAvatar(imgPath) {
+    const tran = Promisify(JMessage.updateMyAvatar)
+    const res = await tran({imgPath})
+    return res
+  }
+
+  async logout() {
+    const tran = Promisify(JMessage.logout)
+    const res = await tran()
+    return res
+  }
+
+  async updateMyPassword(oldPwd, newPwd) {
+    const tran = Promisify(JMessage.updateMyPassword)
+    const res = await tran({oldPwd, newPwd})
+    return res
+  }
+
   @computed
   get isValid() {
     return !this.validateError
+  }
+
+  @computed
+  get isvalidateErrorLogin() {
+    return this.validateErrorUsername && this.validateErrorPassword
   }
 }
 

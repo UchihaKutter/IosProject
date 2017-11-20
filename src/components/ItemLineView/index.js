@@ -2,20 +2,23 @@ import React from 'react'
 import {
   View,
   StyleSheet,
-  Text
+  Text,
+  TouchableOpacity
 } from 'react-native'
+import {observer} from 'mobx-react'
 
+@observer
 export default class ItemView extends React.Component {
   render() {
-    const {left, middle, right, hasUnderLine} = this.props
+    const {left, middle, right, hasUnderLine, onPress} = this.props
     return (
-      <View style={[styles.container, this.props.style]}>
+      <TouchableOpacity style={[styles.container, this.props.style]} onPress={onPress}>
         <View style={[styles.innerContainer, hasUnderLine && _styles.underLine]}>
           <Text style={styles.left}>{left}</Text>
           <Text style={[styles.middle, this.props.middleStyle]}>{middle}</Text>
           <Text style={styles.right}>{right}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }

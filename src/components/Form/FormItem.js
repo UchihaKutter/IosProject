@@ -36,14 +36,14 @@ export default class InputView extends React.Component {
   }
 
   render() {
-    const {name, placeholder, rightView, leftView, propsOfTextInput, stylesOfTextInput} = this.props
+    const {name, placeholder, rightView, leftView, propsOfTextInput, stylesOfTextInput, style} = this.props
     // const { focused } = this.state;
     const form = this.context.form || this.props.form
     const icon = this.showPwd ? <Icon.FontAwesomeIcon name={'eye'} size={20} onPress={this.changeIcon}/>
       : <Icon.FontAwesomeIcon name={'eye-slash'} size={20} onPress={this.changeIcon} color={'#dddddd'}/>
     const secureTextEntry = this.showPwd
     return (
-      <View style={[styles.row, _styles.underLine]}>
+      <View style={[styles.row, _styles.underLine, style]}>
         {leftView}
         <TextInput
           underlineColorAndroid='transparent'
@@ -56,6 +56,7 @@ export default class InputView extends React.Component {
           style={[styles.input, stylesOfTextInput]}
           onChangeText={(text) => {
             form[name] = text
+            console.log(name, text)
           }}
         />
         {this.hasRightView ? rightView ? rightView : icon : null}
@@ -96,9 +97,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 5,
     color: '#333333',
+    marginLeft: 20,
     // height:
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#dddddd',
+    // borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomColor: '#dddddd',
     textAlignVertical: 'center'
   },
   error: {
