@@ -1,7 +1,9 @@
-import {observable, autorunAsync, computed} from 'mobx'
+import {observable, autorunAsync, computed, action} from 'mobx'
 import JMessage from 'jmessage-react-plugin'
 import Storage from '../utils/Storage'
 import validate from 'mobx-form-validate'
+import RNFS from 'react-native-fs'
+import imgToBase64 from '../utils/ImgToBase64'
 
 class User {
   @observable
@@ -27,13 +29,35 @@ class User {
   isNoDisturb // : boolean,       // 是否免打扰
   isInBlackList // : boolean,     // 是否在黑名单中
   isFriend // :boolean            // 是否为好友
+  @observable
+  userInfo = {
+    password: '',
 
+    username: '',// : string,           // 用户名
+    appKey: '',// : string,             // 用户所属应用的 appKey，可与 username 共同作为用户的唯一标识
+
+    nickname: '', // : string,           // 昵称
+
+    gender: '', // : string,             // 'male' / 'female' / 'unknown'
+
+    avatarThumbPath: '', // : string,    // 头像的缩略图地址
+    birthday: '', // : number,           // 日期的毫秒数
+    region: '', // : string,             // 地区
+    signature: '', // : string,          // 个性签名
+    address: '', // : string,            // 具体地址
+    noteName: '',// : string,           // 备注名
+    noteText: '', // : string,           // 备注信息
+    isNoDisturb: '', // : boolean,       // 是否免打扰
+    isInBlackList: '', // : boolean,     // 是否在黑名单中
+    isFriend: '' // :boolean            // 是否为好友
+  }
   constructor() {
     this.init()
   }
 
   async init() {
-    this.userInfo = await Storage.getText('user')
+    const res = await Storage.getText('user')
+    this.userInfo = JSON.parse(res)
     console.log('init: this.userInfo ', this.userInfo)
   }
 
@@ -53,7 +77,9 @@ class User {
     if (res) {
       console.log('res', res)
       this.userInfo = res
-      Storage.saveText('user', res)
+      this.userInfo.avatarThumbPath = 'data:image/png;base64,' + await RNFS.readFile(this.userInfo.avatarThumbPath, 'base64')
+      Storage.saveText('user', JSON.stringify(res))
+      // this.userInfo.avatarThumbPath = 'data:image/png;base64,'+ await RNFS.readFile(this.userInfo.avatarThumbPath,'base64')
       // console.log('user', this.userInfo.username)
     }
     return res
@@ -63,16 +89,16 @@ class User {
     const res = await Storage.getText('user')
     console.log('userInfo', res)
     if (res) {
-      return true
+      return Promise.resolve(true)
     }
-    return false
+    return Promise.reject(false)
   }
 
-  async updateMyInfo(info) {
+  async updateMyInfo() {
     console.log('updateMyInfo begin')
-    console.log(info)
     const tran = Promisify(JMessage.updateMyInfo)
-    const res = await tran(info)
+
+    const res = await tran(this.userInfo)
     if (res) {
       console.log('updateMyInfo success')
     }
@@ -80,15 +106,33 @@ class User {
   }
 
   async updateMyAvatar(imgPath) {
+    let res1
     const tran = Promisify(JMessage.updateMyAvatar)
     const res = await tran({imgPath})
-    return res
+    console.log('updateMyAvatar: ', res)
+    if (res || res === 0) {
+      // this.getMyInfo()
+      res1 = 'data:image/png;base64,' + await imgToBase64(imgPath)
+      if (res1) {
+        this.userInfo.avatarThumbPath = res1
+      }
+    }
+    return res1
   }
 
   async logout() {
-    const tran = Promisify(JMessage.logout)
-    const res = await tran()
-    return res
+    console.log('logout begin')
+    // JMessage.logout()
+    // const tran = Promisify(JMessage.logout)
+    // const res = await tran()
+    try {
+      await this.reset()
+    } catch (error) {
+      console.log(error)
+    }
+    // const res = await this.reset()
+    // console.log('logout', res)
+    // return res
   }
 
   async updateMyPassword(oldPwd, newPwd) {
@@ -105,6 +149,19 @@ class User {
   @computed
   get isvalidateErrorLogin() {
     return this.validateErrorUsername && this.validateErrorPassword
+  }
+
+  async reset() {
+    // this.userInfo = undefined
+    console.log('reset begin')
+    try {
+      const res = await Storage.clearValue('user')
+      console.log('reset', res)
+    } catch (error) {
+      console.log(error)
+    }
+    // const res = await Storage.clearValue('user')
+    // console.log('reset', res)
   }
 }
 

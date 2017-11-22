@@ -44,11 +44,29 @@ const {
 class Root extends React.Component {
   constructor() {
     super()
+    this.state = {
+      signedIn: false,
+      checkedSignIn: false
+    }
+  }
+
+  componentWillMount() {
+    store.user.isLogin()
+      .then(res => this.setState({signedIn: res, checkedSignIn: true}), err => {
+        this.setState({signedIn: err, checkedSignIn: true})
+      })
+
   }
   render() {
+    const {checkedSignIn, signedIn} = this.state
+    console.log('checkedSignIn  ', checkedSignIn, 'signedIn  ', signedIn)
+    if (!checkedSignIn) {
+      return null
+    }
+    const Navigator = RootNavigator(signedIn)
     return (
       <Provider {...store}>
-        <RootNavigator/>
+        <Navigator/>
       </Provider>
     )
   }
@@ -61,25 +79,27 @@ const MainScreenNavigator = TabNavigator({
 })
 
 // store.user.isLogin() ? 'Home' :
-const RootNavigator = StackNavigator({
-  Home: {
-    screen: MainScreenNavigator,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
-  ChatDetail: {
-    screen: ChatDetailScreen,
-  },
-  GiftChatDetail: {
-    screen: GiftChatDetailScreen
-  },
-  Login: {
-    screen: LoginScreen
-  },
-  AccountModify: {
-    screen: AccountModify
-  }
-}, {initialRouteName: 'Login'});
+const RootNavigator = (login = false) => {
+  return StackNavigator({
+    Home: {
+      screen: MainScreenNavigator,
+      navigationOptions: ({navigation}) => ({
+        header: null
+      })
+    },
+    ChatDetail: {
+      screen: ChatDetailScreen
+    },
+    GiftChatDetail: {
+      screen: GiftChatDetailScreen
+    },
+    Login: {
+      screen: LoginScreen
+    },
+    AccountModify: {
+      screen: AccountModify
+    }
+  }, {initialRouteName: login ? 'Home' : 'Login'})
+}
 
 export default Root

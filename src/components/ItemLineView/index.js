@@ -16,7 +16,7 @@ export default class ItemView extends React.Component {
         <View style={[styles.innerContainer, hasUnderLine && _styles.underLine]}>
           <Text style={styles.left}>{left}</Text>
           <Text style={[styles.middle, this.props.middleStyle]}>{middle}</Text>
-          <Text style={styles.right}>{right}</Text>
+          <Text style={[styles.right, this.props.rightStyle]}>{right}</Text>
         </View>
       </TouchableOpacity>
     )

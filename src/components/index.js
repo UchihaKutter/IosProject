@@ -4,6 +4,8 @@ import Form from './Form'
 import Icon from './Icon'
 import ItemLineView from './ItemLineView'
 import CustomButton from './CustomButton'
+import ActionSheet from './ActionSheet'
+import SuccessLoading from './SuccessLoading'
 
 export {
   TestV,
@@ -11,6 +13,8 @@ export {
   Form,
   Icon,
   ItemLineView,
-  CustomButton
+  CustomButton,
+  ActionSheet,
+  SuccessLoading
 }
 

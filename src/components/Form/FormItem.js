@@ -35,13 +35,22 @@ export default class InputView extends React.Component {
     form: PropTypes.object
   }
 
+  // onChange=(text)=>{
+  //   (text) => {
+  //     form[name] = text
+  //     form[className][name] = text
+  //     console.log(name, text)
+  //   }
+  // }
+
   render() {
-    const {name, placeholder, rightView, leftView, propsOfTextInput, stylesOfTextInput, style} = this.props
+    const {name, className, placeholder, rightView, leftView, propsOfTextInput, stylesOfTextInput, style} = this.props
     // const { focused } = this.state;
     const form = this.context.form || this.props.form
     const icon = this.showPwd ? <Icon.FontAwesomeIcon name={'eye'} size={20} onPress={this.changeIcon}/>
       : <Icon.FontAwesomeIcon name={'eye-slash'} size={20} onPress={this.changeIcon} color={'#dddddd'}/>
     const secureTextEntry = this.showPwd
+    const defaultValue = className ? form[className][name] : form[name]
     return (
       <View style={[styles.row, _styles.underLine, style]}>
         {leftView}
@@ -49,14 +58,15 @@ export default class InputView extends React.Component {
           underlineColorAndroid='transparent'
           {...propsOfTextInput}
           placeholder={placeholder}
-          defaultValue={form[name]}
+          defaultValue={defaultValue}
           placeholderTextColor='#bbbbbb'
           multiline={true}
           secureTextEntry={secureTextEntry}
           style={[styles.input, stylesOfTextInput]}
           onChangeText={(text) => {
             form[name] = text
-            console.log(name, text)
+            className ? form[className][name] = text : form[name] = text
+            // console.log(name, text)
           }}
         />
         {this.hasRightView ? rightView ? rightView : icon : null}

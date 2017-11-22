@@ -37,8 +37,8 @@ export default class App extends Component<{}> {
 
   }
 
-  updateMyInfo = (info) => {
-    this.props.user.updateMyInfo(info)
+  updateMyInfo = () => {
+    this.props.user.updateMyInfo()
   }
   // <View style={styles.container}>
   // <TouchableOpacity {...this.props} style={[styles.container1, {...this.props.style}]}>
@@ -61,9 +61,9 @@ export default class App extends Component<{}> {
       <View style={styles.container}>
         <FormProvider form={user}>
           <View style={styles.formContainer}>
-            <FormItem name={name} placeholder={placeholder}
+            <FormItem name={name} className={'userInfo'} placeholder={placeholder}
                       style={{backgroundColor: '#ffffff'}}></FormItem>
-            <Submit onSubmit={this.updateMyInfo({`${name}`:})} style={{position: 'absolute', bottom: 0}}
+            <Submit onSubmit={this.updateMyInfo} style={{position: 'absolute', bottom: 0}}
                     name={name}>保存</Submit>
           </View>
         </FormProvider>

@@ -40,12 +40,12 @@ export default class Com extends Component {
   render() {
     let {color, fontSize, children, enable, textStyle} = this.props
     const clickEnable = this.state.enable
-    console.log(this.props.onPress)
+    // console.log(this.props.onPress)
     console.log('enable: ', enable, 'clickEnable: ', clickEnable)
     return (
       <TouchableOpacity
         style={[styles.button, {backgroundColor: _styles.primeColor}, this.props.style, !enable && styles.buttonUnable]}
-        onPress={this.clickFun}>
+        onPress={enable && clickEnable && this.clickFun}>
         <Text style={[styles.buttonText, textStyle]}>{children}</Text>
       </TouchableOpacity>
     )
