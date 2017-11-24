@@ -1,4 +1,4 @@
-import {observable, autorunAsync, computed, action} from 'mobx'
+import {observable, autorunAsync, computed, action, toJS} from 'mobx'
 import JMessage from 'jmessage-react-plugin'
 import Storage from '../utils/Storage'
 import validate from 'mobx-form-validate'
@@ -53,12 +53,15 @@ class User {
   }
   constructor() {
     this.init()
+    autorunAsync(() => {
+      Storage.saveText('user', JSON.stringify(this.userInfo))
+    }, 500)
   }
 
   async init() {
     const res = await Storage.getText('user')
     this.userInfo = JSON.parse(res)
-    console.log('init: this.userInfo ', this.userInfo)
+    // console.log('init: this.userInfo ', this.userInfo)
   }
 
   async login() {
@@ -77,7 +80,8 @@ class User {
     if (res) {
       console.log('res', res)
       this.userInfo = res
-      this.userInfo.avatarThumbPath = 'data:image/png;base64,' + await RNFS.readFile(this.userInfo.avatarThumbPath, 'base64')
+      this.userInfo.avatarThumbPath && (this.userInfo.avatarThumbPath = 'data:image/png;base64,'
+        + await RNFS.readFile(this.userInfo.avatarThumbPath, 'base64'))
       Storage.saveText('user', JSON.stringify(res))
       // this.userInfo.avatarThumbPath = 'data:image/png;base64,'+ await RNFS.readFile(this.userInfo.avatarThumbPath,'base64')
       // console.log('user', this.userInfo.username)
@@ -97,8 +101,7 @@ class User {
   async updateMyInfo() {
     console.log('updateMyInfo begin')
     const tran = Promisify(JMessage.updateMyInfo)
-
-    const res = await tran(this.userInfo)
+    const res = await tran(toJS(this.userInfo))
     if (res) {
       console.log('updateMyInfo success')
     }
@@ -123,21 +126,23 @@ class User {
   async logout() {
     console.log('logout begin')
     // JMessage.logout()
-    // const tran = Promisify(JMessage.logout)
-    // const res = await tran()
-    try {
-      await this.reset()
-    } catch (error) {
-      console.log(error)
-    }
+    const tran = Promisify(JMessage.logout)
+    tran()
+    const res = await this.reset()
     // const res = await this.reset()
     // console.log('logout', res)
-    // return res
+    return res
   }
 
   async updateMyPassword(oldPwd, newPwd) {
     const tran = Promisify(JMessage.updateMyPassword)
     const res = await tran({oldPwd, newPwd})
+    return res
+  }
+
+  async register() {
+    const tran = Promisify(JMessage.register)
+    const res = await tran({username: this.username, password: this.password})
     return res
   }
 
@@ -152,16 +157,35 @@ class User {
   }
 
   async reset() {
-    // this.userInfo = undefined
+    // this.password=''
+    this.userInfo = {
+      password: '',
+      username: '',// : string,           // 用户名
+      appKey: '',// : string,             // 用户所属应用的 appKey，可与 username 共同作为用户的唯一标识
+      nickname: '', // : string,           // 昵称
+      gender: '', // : string,             // 'male' / 'female' / 'unknown'
+      avatarThumbPath: '', // : string,    // 头像的缩略图地址
+      birthday: '', // : number,           // 日期的毫秒数
+      region: '', // : string,             // 地区
+      signature: '', // : string,          // 个性签名
+      address: '', // : string,            // 具体地址
+      noteName: '',// : string,           // 备注名
+      noteText: '', // : string,           // 备注信息
+      isNoDisturb: '', // : boolean,       // 是否免打扰
+      isInBlackList: '', // : boolean,     // 是否在黑名单中
+      isFriend: '' // :boolean            // 是否为好友
+    }
+    let res
     console.log('reset begin')
     try {
-      const res = await Storage.clearValue('user')
+      res = await Storage.delete('user')
       console.log('reset', res)
     } catch (error) {
       console.log(error)
     }
     // const res = await Storage.clearValue('user')
     // console.log('reset', res)
+    return res
   }
 }
 

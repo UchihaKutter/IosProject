@@ -1,4 +1,4 @@
-import {observer} from 'mobx-react/native'
+import {observer} from 'mobx-react'
 import React from 'react'
 
 import {
@@ -12,9 +12,8 @@ import {
 import Animation from 'lottie-react-native'
 import * as Animatable from 'react-native-animatable'
 import RootSiblings from 'react-native-root-siblings'
-
 @observer
-class Loading extends React.PureComponent {
+class Loading extends React.Component {
 
   constructor(props) {
     super(props)

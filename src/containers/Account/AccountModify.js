@@ -29,6 +29,11 @@ import Storage from '../../utils/Storage'
 }))
 @observer
 export default class App extends Component<{}> {
+  static navigationOptions = ({navigation, screenProps}) => ({
+    // 这里面的属性和App.js的navigationOptions是一样的。
+    headerTitle: '修改'
+  })
+
   constructor() {
     super()
   }
@@ -38,7 +43,9 @@ export default class App extends Component<{}> {
   }
 
   updateMyInfo = () => {
-    this.props.user.updateMyInfo()
+    this.props.user.updateMyInfo().then(v => {
+      this.props.navigation.goBack()
+    })
   }
   // <View style={styles.container}>
   // <TouchableOpacity {...this.props} style={[styles.container1, {...this.props.style}]}>

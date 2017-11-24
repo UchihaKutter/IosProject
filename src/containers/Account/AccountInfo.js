@@ -9,7 +9,7 @@ import {
 import {inject, observer} from 'mobx-react'
 import {CustomButton, ItemLineView, Icon, ActionSheet, SuccessLoading} from '../../components'
 import ImagePicker from 'react-native-image-picker'
-import RNFS from 'react-native-fs'
+import {NavigationActions} from 'react-navigation'
 const {FontAwesomeIcon} = Icon
 
 @inject(stores => ({
@@ -26,7 +26,15 @@ export default class App extends Component<{}> {
   }
 
   logout = () => {
-    this.props.user.logout()
+    this.props.user.logout().then(v => {
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({routeName: 'Login'})
+        ]
+      })
+      this.props.navigation.dispatch(resetAction)
+    })
   }
 
   updateMyAvatar = () => {
@@ -65,6 +73,9 @@ export default class App extends Component<{}> {
   }
 
   handleChooseGenderPress = (i) => {
+    if (i === 0) {
+      return
+    }
     let sex
     if (i === 1) {
       sex = 'male'
@@ -107,9 +118,9 @@ export default class App extends Component<{}> {
         <ItemLineView left='头像' right={icon} style={{height: 80, marginTop: 20}}
                       hasUnderLine={true} onPress={this.updateMyAvatar}/>
         <ItemLineView left='账号' right={username} hasUnderLine={true} onPress={this.gotoModifyUsername}
-                      callback={this.updateMyInfo}/>
+        />
         <ItemLineView left='昵称' right={nickname} hasUnderLine={true} onPress={this.gotoModifyNickname}
-                      callback={this.updateMyInfo}/>
+        />
         <ItemLineView left='性别' right={gender} hasUnderLine={true} onPress={this.chooseGender}
                       callback={this.updateMyInfo}/>
         <CustomButton style={{position: 'absolute', bottom: 0}} onPress={this.logout}>退出登录</CustomButton>

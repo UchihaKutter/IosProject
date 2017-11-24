@@ -3,7 +3,7 @@ import {FlatList, RefreshControl, View} from 'react-native'
 import {observer} from 'mobx-react/native'
 
 @observer
-class Comp extends React.Component {
+class PageList extends React.Component {
 
   constructor(props) {
     super(props)
@@ -26,7 +26,8 @@ class Comp extends React.Component {
   }
 
   render() {
-    const list = this.store.list.slice(0)
+    const list = this.store.list
+    console.log('PageList comp ', list)
     return (
       <View>
         <FlatList
@@ -45,4 +46,4 @@ class Comp extends React.Component {
 
 }
 
-export default Comp
+export default PageList

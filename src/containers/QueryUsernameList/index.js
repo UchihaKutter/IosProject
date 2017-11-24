@@ -5,23 +5,22 @@ import React, {Component} from 'react'
 import {
   StyleSheet,
   View,
+
   Image,
   Text,
+
   TouchableOpacity,
   PixelRatio
+
 } from 'react-native'
 import {inject, observer} from 'mobx-react'
-import {PageList} from '../../components'
+import {PageList, SearchBar} from '../../components'
 import {Icon} from '../../components'
-import {observable} from 'mobx'
-import imgToBase64 from '../../utils/ImgToBase64'
-import Badge from 'react-native-smart-badge'
-import moment from 'moment'
 
 const {FontAwesomeIcon} = Icon
 @inject(stores => ({
   user: stores.user,
-  conversationList: stores.conversationList
+  queryUsernameList: stores.queryUsernameList
 }))
 @observer
 export default class Page extends Component {
@@ -33,72 +32,39 @@ export default class Page extends Component {
   }
 
   componentDidMount() {
-    this.props.conversationList.getList().then()
+    const {navigation} = this.props
+    const {username} = navigation.state.params
+    this.props.queryUsernameList.getList({username}).then()
   }
 
-  gotoChatDetail = () => {
+  gotoDetail = () => {
     this.props.navigation.navigate('ChatDetail')
   }
 
   renderItem = ({index, item}) => {
-    return (<Item data={item}/>)
-  }
-
-  render() {
-    return (
-      <PageList
-        renderItem={this.renderItem}
-        store={this.props.conversationList}
-      />
-
-    )
-  }
-}
-
-@observer
-class Item extends Component {
-  @observable
-  avatarThumbPath = ''
-
-  componentDidMount() {
-    imgToBase64(this.props.data.target.avatarThumbPath).then(v => {
-      this.avatarThumbPath = 'data:image/png;base64,' + v
-    })
-  }
-
-  render() {
-    const {
-      title,                  // 会话标题
-      latestMessage,         // 最近的一条消息对象
-      unreadCount,            // 未读消息数
-      conversationType, //'single' / 'group',
-      target
-    } = this.props.data
-    const {avatarThumbPath, username} = target
-    let {text, createTime} = latestMessage
-    createTime = moment(createTime).format('YYYY-MM-DD HH:mm ')
+    const {username, avatarThumbPath} = item
     const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
-      : <Image style={[styles.image]} source={{uri: this.avatarThumbPath}}/>
+      : <Image style={[styles.image]} source={{uri: avatarThumbPath}}/>
     return (
-      <TouchableOpacity style={styles.item} onPress={this.gotoChatDetail}>
-        <View style={{padding: 5}}>
-          <Badge style={{position: 'absolute', top: 2, right: 0}} minWidth={12} minHeight={12}
-                 textStyle={{
-                   color: '#ffffff', fontSize: 12, paddingVertical: 0,
-                   paddingHorizontal: 2
-                 }} extraPaddingHorizontal={Number(3)}>
-            {unreadCount}
-          </Badge>
-          {icon}
-        </View>
+      <TouchableOpacity style={styles.item} onPress={this.gotoDetail}>
+        {icon}
         <View style={styles.content_item_container}>
           <View style={styles.detail_container}>
             <Text style={styles.text_title}>{username}</Text>
-            <Text style={styles.text_date}>{createTime}</Text>
           </View>
-          <Text style={styles.text_content}>{text}</Text>
         </View>
       </TouchableOpacity>
+    )
+  }
+
+  render() {
+    return (
+      <View style={{flex: 1}}>
+        <PageList
+          renderItem={this.renderItem}
+          store={this.props.queryUsernameList}
+        />
+      </View>
     )
   }
 }
@@ -132,7 +98,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     marginLeft: 15,
-    marginRight: 15
+    marginRight: 16
 
   },
 
@@ -148,7 +114,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 65,
     width: 286
-
     // borderBottomWidth:1/PixelRatio.get(),
     // borderBottomColor:'#dddddd',
   },
@@ -159,8 +124,7 @@ const styles = StyleSheet.create({
     height: 65,
     width: 286,
     borderBottomWidth: 1 / PixelRatio.get(),
-    borderBottomColor: '#dddddd',
-    marginLeft: 10
+    borderBottomColor: '#dddddd'
   },
 
   detail_container: {

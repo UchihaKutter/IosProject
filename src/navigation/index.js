@@ -2,16 +2,24 @@ import {StackNavigator, TabNavigator} from 'react-navigation'
 import {Provider} from 'mobx-react'
 import {
   ChatDetail as ChatDetailScreen, GiftChatDetail as GiftChatDetailScreen,
-  Login as LoginScreen, ChatList, Account
+  LoginAndRes, ChatList, Account, FriendList, QueryUsernameList, OtherUserDetailInfo
 } from '../containers'
 import store from '../stores'
 import Storage from '../utils/Storage'
 import React from 'react'
+import {UIManager} from 'react-native'
+import JMessage from 'jmessage-react-plugin'
+import EventActions from '../utils/EventActions'
 
 const {
   AccountInfo,
   AccountModify
 } = Account
+
+const {
+  Login,
+  Register
+} = LoginAndRes
 
 // const AppNavigator = StackNavigator(AppRouteConfigs);
 
@@ -49,14 +57,36 @@ class Root extends React.Component {
       checkedSignIn: false
     }
   }
-
   componentWillMount() {
     store.user.isLogin()
       .then(res => this.setState({signedIn: res, checkedSignIn: true}), err => {
         this.setState({signedIn: err, checkedSignIn: true})
       })
+  }
+
+  componentDidMount() {
+    // UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    JMessage.addContactNotifyListener(this.listener)
+    JMessage.addReceiveMessageListener(this.msgListener)
+  }
+
+  componentWillUnmount() {
+    JMessage.removeContactNotifyListener(this.listener)
+    JMessage.removeReceiveMessageListener(this.msgListener)
+  }
+
+  listener = (event) => {
+    // 回调参数 event 为好友事件
+    console.log('event ', event)
+    EventActions.ContactNotifyAction(event, RootNavigator)
+  }
+
+  msgListener = (msg) => {
+    console.error('msg ', msg)
+    // EventActions.MsgNotifyAction(msg, RootNavigator)
 
   }
+
   render() {
     const {checkedSignIn, signedIn} = this.state
     console.log('checkedSignIn  ', checkedSignIn, 'signedIn  ', signedIn)
@@ -74,9 +104,16 @@ class Root extends React.Component {
 
 const MainScreenNavigator = TabNavigator({
   ConversationList: {screen: ChatList},
-  FriendList: {screen: ChatList},
+    FriendList: {screen: FriendList},
   AccountInfo: {screen: AccountInfo}
-})
+  }, {
+    tabBarOptions: {
+      style: {
+        paddingTop: 15
+      }
+    }
+  }
+)
 
 // store.user.isLogin() ? 'Home' :
 const RootNavigator = (login = false) => {
@@ -94,12 +131,33 @@ const RootNavigator = (login = false) => {
       screen: GiftChatDetailScreen
     },
     Login: {
-      screen: LoginScreen
+      screen: Login,
+      navigationOptions: ({navigation}) => ({
+        header: null
+      })
+    },
+    Register: {
+      screen: Register
     },
     AccountModify: {
       screen: AccountModify
+    },
+    QueryUsernameList: {
+      screen: QueryUsernameList
+    },
+    OtherUserDetailInfo: {
+      screen: OtherUserDetailInfo
     }
-  }, {initialRouteName: login ? 'Home' : 'Login'})
+  }, {
+    initialRouteName: login ? 'Home' : 'Login',
+    navigationOptions: navigationOptions
+  })
 }
+
+const navigationOptions = ({navigation}) => ({
+  headerTintColor: '#ffffff',
+  headerStyle: {backgroundColor: _styles.primeColor},
+  headerTitleStyle: {fontSize: 16}
+})
 
 export default Root

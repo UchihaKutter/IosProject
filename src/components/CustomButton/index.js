@@ -30,7 +30,9 @@ export default class Com extends Component {
 
   clickFun = async () => {
     console.log('clickFun begin')
-    this.props.onPress && this.props.onPress()
+    const clickEnable = this.state.enable
+    const enable = this.props.enable
+    enable && clickEnable && this.props.onPress && this.props.onPress()
     await this.setState({enable: false})// 防重复点击
     this.timer = setTimeout(async () => {
       await this.setState({enable: true})// 1秒后可点击
@@ -45,7 +47,7 @@ export default class Com extends Component {
     return (
       <TouchableOpacity
         style={[styles.button, {backgroundColor: _styles.primeColor}, this.props.style, !enable && styles.buttonUnable]}
-        onPress={enable && clickEnable && this.clickFun}>
+        onPress={this.clickFun}>
         <Text style={[styles.buttonText, textStyle]}>{children}</Text>
       </TouchableOpacity>
     )

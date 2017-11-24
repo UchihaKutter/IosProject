@@ -14,9 +14,9 @@ import {
 
 } from 'react-native'
 import {inject, observer} from 'mobx-react'
-import {PageList} from '../../components'
+import {PageList, SearchBar} from '../../components'
 import {Icon} from '../../components'
-
+import imgToBase64 from '../../utils/ImgToBase64'
 const {FontAwesomeIcon} = Icon
 @inject(stores => ({
   user: stores.user,
@@ -39,35 +39,61 @@ export default class Page extends Component {
     this.props.navigation.navigate('ChatDetail')
   }
 
+  gotoSearchResult = (username) => {
+    this.props.navigation.navigate('OtherUserDetailInfo', {username: username})
+  }
+
+
   renderItem = ({index, item}) => {
-    const {target, conversationType, title, latestMessage, unreadCount} = item
-    const avatarThumbPath = conversationType === 'single' ? target.avatarThumbPath : ''
-    // if(conversationType === 'single') {
-    //   const {avatarThumbPath} = target
-    // }
-    const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
-      : <Image style={[styles.image]} source={{uri: avatarThumbPath}}/>
     return (
-      <TouchableOpacity style={styles.item} onPress={this.gotoChatDetail}>
-        {icon}
-        <View style={styles.content_item_container}>
-          <View style={styles.detail_container}>
-            <Text style={styles.text_title}>{title}</Text>
-            <Text style={styles.text_date}>{unreadCount}</Text>
-          </View>
-          <Text style={styles.text_content}>{latestMessage}</Text>
-        </View>
-      </TouchableOpacity>
+      <Item data={item}/>
     )
   }
 
   render() {
     return (
-      <PageList
-        renderItem={this.renderItem}
-        store={this.props.friendList}
-      />
+      <View>
+        <SearchBar placeholder={'请输入好友名称'} onSearch={this.gotoSearchResult}></SearchBar>
+        <PageList
+          renderItem={this.renderItem}
+          store={this.props.friendList}
+        />
+      </View>
+    )
+  }
+}
 
+@observer
+class Item extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      avatarThumbPath: ''
+    }
+  }
+
+  componentDidMount() {
+    imgToBase64(this.props.data.avatarThumbPath).then(v => {
+      this.setState({avatarThumbPath: 'data:image/png;base64,' + v})
+    })
+  }
+
+  render() {
+    const {username, nickname, gender, avatarThumbPath} = this.props.data
+    const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
+      : <Image style={[styles.image]} source={{uri: this.state.avatarThumbPath}}/>
+    return (
+      <TouchableOpacity style={styles.item}>
+        {icon}
+        {/*<View style={styles.content_item_container}>*/}
+        {/*<View style={styles.detail_container}>*/}
+        {/*<Text style={styles.text_title}>{title}</Text>*/}
+        {/*<Text style={styles.text_date}>{unreadCount}</Text>*/}
+        {/*</View>*/}
+        {/*<Text style={styles.text_content}>{latestMessage}</Text>*/}
+        {/*</View>*/}
+        <Text style={styles.text_title}>{nickname}</Text>
+      </TouchableOpacity>
     )
   }
 }
@@ -88,7 +114,7 @@ const styles = StyleSheet.create({
   item: {
     height: 65,
     flexDirection: 'row',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white'
   },

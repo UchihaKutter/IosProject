@@ -24,23 +24,27 @@ class FriendList extends PageList {
   isNoDisturb // : boolean,       // 是否免打扰
   isInBlackList // : boolean,     // 是否在黑名单中
   isFriend // :boolean            // 是否为好友
+  @observable
+  queryList = []
 
   async getList() {
     const getFriends = Promisify(JMessage.getFriends)
     const res = await getFriends()
-    if(res) {
+    if (res || res === 0) {
       this.list = res
       console.log(this.list)
     }
     return res
-    // JMessage.getFriends((friendArr) => {  // 好友用户对象数组。
-    //   // do something.
-    //   this.list = friendArr
-    //
-    // }, (error) => {
-    //   var code = error.code
-    //   var desc = error.description
-    // })
+  }
+
+  async queryName() {
+    const tran = Promisify(JMessage.getUserInfo)
+    const res = await tran()
+    if (res || res === 0) {
+      this.queryList = res
+      console.log(this.list)
+    }
+    return res
   }
 }
 

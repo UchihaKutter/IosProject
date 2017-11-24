@@ -15,7 +15,7 @@ import {
 import {Form} from '../../components'
 import {observer, inject} from 'mobx-react/native'
 import {observable} from 'mobx'
-
+import {NavigationActions} from 'react-navigation'
 const {FormProvider, FormItem, Submit} = Form
 
 @inject(stores => ({
@@ -32,6 +32,10 @@ export default class Page extends React.Component {
 
   }
 
+  gotoRes = () => {
+    this.props.navigation.navigate('Register')
+  }
+
   render() {
     const {user} = this.props
     return (
@@ -44,6 +48,10 @@ export default class Page extends React.Component {
             <Submit name='login' onSubmit={this.onClickLogin}>登录</Submit>
           </View>
         </FormProvider>
+        <Text style={{
+          fontSize: 16, color: _styles.primeColor, borderBottomColor: _styles.primeColor,
+          borderBottomWidth: 1, position: 'absolute', bottom: 100, right: 40
+        }} onPress={this.gotoRes}>注册</Text>
       </View>
     )
   }
@@ -52,7 +60,13 @@ export default class Page extends React.Component {
     // const dismissKeyboard = require('dismissKeyboard')
     // dismissKeyboard()
     this.props.user.login().then(() => {
-      this.props.navigation.navigate('Home')
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({routeName: 'Home'})
+        ]
+      })
+      this.props.navigation.dispatch(resetAction)
     })
 
   }
@@ -69,6 +83,10 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '80%'
   },
+  // regText: {
+  //   fontSize:16,
+  //   color:'s'
+  // },
 
   bottomContainer: {
     flexDirection: 'row',

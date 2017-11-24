@@ -27,7 +27,6 @@ export default class InputView extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     form: PropTypes.object,
-    children: PropTypes.string.isRequired,
     autoFocus: PropTypes.boolean,
     ...TextInput.propTypes
   }

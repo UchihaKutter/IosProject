@@ -9,7 +9,12 @@ import {
 import {GiftedChat, Actions, Bubble, SystemMessage} from 'react-native-gifted-chat'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
-
+import {inject, observer} from 'mobx-react'
+import Conversation from '../../stores/conversation'
+// @inject(stores => ({
+//   conversation: stores.conversation
+// }))
+@observer
 export default class Example extends React.Component {
   constructor(props) {
     super(props)
@@ -30,6 +35,8 @@ export default class Example extends React.Component {
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
 
     this._isAlright = null
+
+    this.conversation = new Conversation(this.props.navigation.state.params.conversation)
   }
 
   componentWillMount() {
@@ -72,6 +79,11 @@ export default class Example extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages)
       }
     })
+    const text = messages[0].text
+    if (text) {
+      this.conversation.addTextMessage(text)
+    }
+
 
     // for demo purpose
     this.answerDemo(messages)

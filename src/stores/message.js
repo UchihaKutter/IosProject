@@ -1,6 +1,8 @@
 import {observable} from 'mobx'
+import User from './user'
+import JMessage from 'jmessage-react-plugin'
 
-export default class User {
+export default class Message {
   id // : string,                     // 消息 id
   type // : 'text',                   // 消息类型
   from // : UserInfo,                 // 消息发送者对象
@@ -33,4 +35,88 @@ export default class User {
   // 事件信息
   eventType // : string,       // 'group_member_added' / 'group_member_removed' / 'group_member_exit'
   usernames // : Array         // 该事件涉及到的用户 username 数组
+
+  constructor(username) {
+    this.userName = username
+  }
+
+  // messageType: 'text / image / voice / file / location / custom',
+  async createSendMessage({
+                            type = 'single', username = this.userName, appKey = '', messageType = 'text', text = this.text,
+                            path = this.path, latitude = this.latitude, longitude = this.longitude,
+                            scale = this.scale, address = this.address, customObject = this.customObject, extras = this.extras
+                          }) {
+    const tran = Promisify(JMessage.createSendMessage)
+    const res = await tran({
+      type, username, appKey, messageType, text,
+      path, latitude, longitude, scale, address, customObject, extras
+    })
+    if (res || res === 0) {
+      this.message = res
+      console.log(this.message)
+    }
+    return res
+  }
+
+  async sendCustomMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendCustomMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async sendMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async sendTextMessage({type = 'single', username = this.userName, appKey = '', text, id}) {
+    const tran = Promisify(JMessage.sendMessage)
+    const res = await tran({type, username, appKey, text, id})
+    return res
+  }
+
+  async sendImageMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendImageMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async sendVoiceMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendVoiceMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async sendLocationMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendLocationMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async sendFileMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.sendFileMessage)
+    const res = await tran(this.message)
+    return res
+  }
+
+  async retractMessage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.retractMessage)
+    const res = await tran({type, username, appKey, messageType, text})
+    return res
+  }
+
+  async getHistoryMessages({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.getHistoryMessages)
+    const res = await tran({type, username, appKey, messageType, text})
+    return res
+  }
+
+  async downloadOriginalImage({type = 'single', username = this.userName, appKey = '', messageType, text}) {
+    const tran = Promisify(JMessage.downloadOriginalImage)
+    const res = await tran({type, username, appKey, messageType, text})
+    return res
+  }
+
+
 }

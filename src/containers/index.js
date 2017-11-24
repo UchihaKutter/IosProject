@@ -1,14 +1,20 @@
 import App from './App'
 import ChatDetail from './ChatDetail'
 import GiftChatDetail from './GiftChatDetail'
-import Login from './LoginAndRes/Login'
+import LoginAndRes from './LoginAndRes'
 import ChatList from './ChatList'
 import Account from './Account'
+import FriendList from './FriendList'
+import QueryUsernameList from './QueryUsernameList'
+import OtherUserDetailInfo from './OtherUserDetailInfo'
 export {
   App,
   ChatDetail,
   GiftChatDetail,
-  Login,
+  LoginAndRes,
   ChatList,
-  Account
+  Account,
+  FriendList,
+  QueryUsernameList,
+  OtherUserDetailInfo
 }
