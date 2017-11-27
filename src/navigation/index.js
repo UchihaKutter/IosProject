@@ -21,6 +21,11 @@ const {
   Register
 } = LoginAndRes
 
+const {
+  Friends,
+  NewFriend
+} = FriendList
+
 // const AppNavigator = StackNavigator(AppRouteConfigs);
 
 // const navReducer = (state, action) => {
@@ -48,7 +53,7 @@ const {
 //     );
 //   }
 // }
-
+let Navigator
 class Root extends React.Component {
   constructor() {
     super()
@@ -56,6 +61,11 @@ class Root extends React.Component {
       signedIn: false,
       checkedSignIn: false
     }
+    JMessage.init({
+      appkey: 'c6ea313a86e699193578fd53',
+      isOpenMessageRoaming: false, // 是否开启消息漫游，默认不开启
+      isProduction: false // 是否为生产模式
+    })
   }
   componentWillMount() {
     store.user.isLogin()
@@ -78,12 +88,12 @@ class Root extends React.Component {
   listener = (event) => {
     // 回调参数 event 为好友事件
     console.log('event ', event)
-    EventActions.ContactNotifyAction(event, RootNavigator)
+    EventActions.ContactNotifyAction(event, this.navigatorRef)
   }
 
   msgListener = (msg) => {
-    console.error('msg ', msg)
-    // EventActions.MsgNotifyAction(msg, RootNavigator)
+    console.log('msg ', msg)
+    EventActions.MsgNotifyAction(msg, Navigator)
 
   }
 
@@ -93,10 +103,12 @@ class Root extends React.Component {
     if (!checkedSignIn) {
       return null
     }
-    const Navigator = RootNavigator(signedIn)
+    Navigator = RootNavigator(signedIn)
     return (
       <Provider {...store}>
-        <Navigator/>
+        <Navigator ref={navigatorRef => {
+          this.navigatorRef = navigatorRef
+        }}/>
       </Provider>
     )
   }
@@ -104,7 +116,7 @@ class Root extends React.Component {
 
 const MainScreenNavigator = TabNavigator({
   ConversationList: {screen: ChatList},
-    FriendList: {screen: FriendList},
+  FriendList: {screen: Friends},
   AccountInfo: {screen: AccountInfo}
   }, {
     tabBarOptions: {
@@ -147,6 +159,9 @@ const RootNavigator = (login = false) => {
     },
     OtherUserDetailInfo: {
       screen: OtherUserDetailInfo
+    },
+    NewFriend: {
+      screen: NewFriend
     }
   }, {
     initialRouteName: login ? 'Home' : 'Login',

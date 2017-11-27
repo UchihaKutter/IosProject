@@ -16,7 +16,7 @@ public class MainActivity extends ReactActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setStatusBar();
         super.onCreate(savedInstanceState);
-        JMessageClient.init(getApplicationContext(), true);
+//        JMessageClient.init(getApplicationContext(), true);
     }
 
     /**

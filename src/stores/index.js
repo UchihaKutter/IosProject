@@ -4,6 +4,7 @@ import user from './user'
 import queryUsernameList from './queryUsernameList'
 import otherUser from './otherUser'
 import conversation from './conversation'
+import waitingAcceptFriList from './waitingAcceptFriList'
 
 const store = {
   friendList,
@@ -11,7 +12,8 @@ const store = {
   user,
   otherUser,
   queryUsernameList,
-  conversation
+  conversation,
+  waitingAcceptFriList
 
 }
 export default store

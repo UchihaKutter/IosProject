@@ -144,6 +144,23 @@ export default class Example extends React.Component {
     })
   }
 
+  _onReceive(msg) {
+    this.setState((previousState) => {
+      return {
+        messages: GiftedChat.append(previousState.messages, {
+          _id: Math.round(Math.random() * 1000000),
+          text: text,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'React Native'
+            // avatar: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png',
+          }
+        })
+      }
+    })
+  }
+
   renderAvatar(props) {
     console.log('renderAvatar', props)
   }
