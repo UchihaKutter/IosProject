@@ -11,9 +11,10 @@ import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 import {inject, observer} from 'mobx-react'
 import Conversation from '../../stores/conversation'
-// @inject(stores => ({
-//   conversation: stores.conversation
-// }))
+
+@inject(stores => ({
+  user: stores.user
+}))
 @observer
 export default class Example extends React.Component {
   constructor(props) {
@@ -33,19 +34,25 @@ export default class Example extends React.Component {
     this.renderSystemMessage = this.renderSystemMessage.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
-
     this._isAlright = null
+    this.conversation = this.props.navigation.state.params.conversation
+  }
 
-    this.conversation = new Conversation(this.props.navigation.state.params.conversation)
+  componentDidMount() {
+    this.conversation.getHistoryMessages().then(v => {
+      this.setState({
+        messages: this.conversation.uiList
+      })
+    })
   }
 
   componentWillMount() {
     this._isMounted = true
-    this.setState(() => {
-      return {
-        messages: require('./data.js')
-      }
-    })
+    // this.setState(() => {
+    //   return {
+    //     messages: require('./data.js')
+    //   }
+    // })
   }
 
   componentWillUnmount() {
@@ -86,7 +93,7 @@ export default class Example extends React.Component {
 
 
     // for demo purpose
-    this.answerDemo(messages)
+    // this.answerDemo(messages)
   }
 
   answerDemo(messages) {
@@ -240,9 +247,12 @@ export default class Example extends React.Component {
   }
 
   render() {
+    const {username, nickname} = this.props.user.userInfo
+    const list = this.conversation.uiList.slice(0)
+    console.log('chat detail list', list)
     return (
       <GiftedChat
-        messages={this.state.messages}
+        messages={list}
         onSend={this.onSend}
         loadEarlier={this.state.loadEarlier}
         onLoadEarlier={this.onLoadEarlier}
@@ -252,8 +262,8 @@ export default class Example extends React.Component {
         keyboardShouldPersistTaps={'handled'}
         // renderAvatar = {this.renderAvatar}
         user={{
-          _id: 1, // sent messages should have same user._id
-          name: 'Developer'
+          _id: username, // sent messages should have same user._id
+          name: nickname
         }}
         renderActions={this.renderCustomActions}
         renderBubble={this.renderBubble}

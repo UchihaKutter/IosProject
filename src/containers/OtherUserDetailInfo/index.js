@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {inject, observer} from 'mobx-react'
 import {CustomButton, ItemLineView, Icon, ActionSheet, SuccessLoading} from '../../components'
+import Conversation from '../../stores/conversation'
 
 const {FontAwesomeIcon} = Icon
 
@@ -35,11 +36,13 @@ export default class App extends Component<{}> {
   }
 
   createConversation = () => {
-    this.props.otherUser.createConversation().then(v => {
-      this.props.navigation.navigate('GiftChatDetail', {conversation: v})
+    const {username} = this.props.otherUser.userInfo
+    console.log('createConversation username', username)
+    this.conversation = new Conversation(username)
+    this.conversation.createConversation().then(v => {
+      this.props.navigation.navigate('GiftChatDetail', {conversation: this.conversation})
     })
   }
-
   render() {
     console.log('AccountInfo render')
     const {navigation} = this.props

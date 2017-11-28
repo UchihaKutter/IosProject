@@ -75,7 +75,7 @@ class Item extends Component {
       target
     } = this.props.data
     const {avatarThumbPath, username} = target
-    let {text, createTime} = latestMessage
+    let {text, createTime} = latestMessage ? latestMessage : {}
     createTime = moment(createTime).format('YYYY-MM-DD HH:mm ')
     const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
       : <Image style={[styles.image]} source={{uri: this.avatarThumbPath}}/>

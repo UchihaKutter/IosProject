@@ -2,7 +2,7 @@ import {observable, autorunAsync} from 'mobx'
 import JMessage from 'jmessage-react-plugin'
 import PageList from '../utils/PageList'
 import Storage from '../utils/Storage'
-import conversation from './conversation'
+import Conversation from './conversation'
 
 class FriendList {
   @observable
@@ -69,7 +69,6 @@ class FriendList {
     console.log('acceptInvitation', res)
     if (res || res === 0) {
       this.removeItem(item)
-      conversation.addTextMessage
     }
     return res
   }

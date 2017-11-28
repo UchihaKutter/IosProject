@@ -14,6 +14,7 @@ import {
 import {inject, observer} from 'mobx-react'
 import {PageList, SearchBar, CustomButton} from '../../components'
 import {Icon} from '../../components'
+import Conversation from '../../stores/conversation'
 import imgToBase64 from '../../utils/ImgToBase64'
 import Badge from 'react-native-smart-badge'
 
@@ -52,7 +53,14 @@ export default class Page extends Component {
     )
   }
   acceptInvitation = (item) => {
-    this.props.waitingList.acceptInvitation(item)
+    const {fromUsername} = item
+    this.props.waitingList.acceptInvitation(item).then(v => {
+      this.conversation = new Conversation(fromUsername)
+      this.conversation.createConversation().then(v => {
+        this.conversation.addSysMsg('你已经加对方为好友，现在你可以跟他聊天')
+        this.props.navigation.navigate('GiftChatDetail', {conversation: this.conversation})
+      })
+    })
   }
 
   declineInvitation = (item) => {

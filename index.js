@@ -5,7 +5,8 @@ import Promisify from './src/utils/Promisify'
 import {
   StyleSheet
 } from 'react-native'
-
+// 关掉黄屏警告
+// console.disableYellowBox = true
 global.Promisify = Promisify
 global.Resolution = Resolution
 // global.Resolution.setDesignSize()

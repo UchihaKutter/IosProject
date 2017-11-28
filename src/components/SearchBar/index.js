@@ -35,6 +35,7 @@ export default class Com extends PureComponent {
                    onEndEditing={(event) => this.onEndEditing(event)}
                    placeholder={placeholder}
                    placeholderTextColor='#cccccc'
+                   defaultValue={'15880133505'}
                    onChangeText={(text) => {
                      this.text = text
                    }}

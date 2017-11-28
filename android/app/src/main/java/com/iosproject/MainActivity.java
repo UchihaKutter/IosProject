@@ -16,6 +16,7 @@ public class MainActivity extends ReactActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setStatusBar();
         super.onCreate(savedInstanceState);
+        AndroidBug5497Workaround.assistActivity(this);
 //        JMessageClient.init(getApplicationContext(), true);
     }
 

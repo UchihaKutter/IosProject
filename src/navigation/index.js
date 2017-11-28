@@ -7,9 +7,17 @@ import {
 import store from '../stores'
 import Storage from '../utils/Storage'
 import React from 'react'
-import {UIManager} from 'react-native'
+import {
+  UIManager,
+  Text
+} from 'react-native'
 import JMessage from 'jmessage-react-plugin'
 import EventActions from '../utils/EventActions'
+import {Icon} from '../components'
+
+const {
+  FontAwesomeIcon
+} = Icon
 
 const {
   AccountInfo,
@@ -115,14 +123,72 @@ class Root extends React.Component {
 }
 
 const MainScreenNavigator = TabNavigator({
-  ConversationList: {screen: ChatList},
-  FriendList: {screen: Friends},
-  AccountInfo: {screen: AccountInfo}
+  ConversationList: {
+    screen: ChatList,
+    navigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, tintColor}) => (
+        <FontAwesomeIcon
+          size={30}
+          name={'wechat'}
+          color={tintColor}
+        />
+      ),
+      tabBarLabel: ({focused, tintColor}) => (
+        <Text style={{fontSize: 14, color: tintColor}}>聊天</Text>
+      )
+    })
+  },
+  FriendList: {
+    screen: Friends,
+    navigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, tintColor}) => (
+        <FontAwesomeIcon
+          size={30}
+          name={'address-book-o'}
+          color={tintColor}
+        />
+      ),
+      tabBarLabel: ({focused, tintColor}) => (
+        <Text style={{fontSize: 14, color: tintColor}}>朋友</Text>
+      )
+    })
+  },
+  AccountInfo: {
+    screen: AccountInfo,
+    navigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, tintColor}) => (
+        <FontAwesomeIcon
+          size={30}
+          name={'user'}
+          color={tintColor}
+        />
+      ),
+      tabBarLabel: ({focused, tintColor}) => (
+        <Text style={{fontSize: 14, color: tintColor}}>我的</Text>
+      )
+    })
+  }
   }, {
+  lazy: true,
     tabBarOptions: {
+      showIcon: true,
       style: {
-        paddingTop: 15
-      }
+        paddingTop: 15,
+        justifyContent: 'flex-end',
+        backgroundColor: '#198cff'
+      },
+      indicatorStyle: {
+        backgroundColor: '#ffffff'
+      },
+      tabStyle: {
+        justifyContent: 'flex-end'
+      },
+      iconStyle: {
+        height: 40,
+        width: 40
+      },
+      activeTintColor: '#ffffff',
+      inactiveTintColor: '#dddddd'
     }
   }
 )
@@ -164,7 +230,7 @@ const RootNavigator = (login = false) => {
       screen: NewFriend
     }
   }, {
-    initialRouteName: login ? 'Home' : 'Login',
+    initialRouteName: 'Login',
     navigationOptions: navigationOptions
   })
 }

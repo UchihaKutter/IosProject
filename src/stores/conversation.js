@@ -1,4 +1,4 @@
-import {observable} from 'mobx'
+import {observable, autorun, computed} from 'mobx'
 import Message from './message'
 import JMessage from 'jmessage-react-plugin'
 
@@ -11,22 +11,34 @@ export default class User {
   @observable
   list = []
 
-  constructor(conversation) {
-    console.log(conversation)
-    this.title = conversation.title
-    this.latestMessage = conversation.latestMessage
-    unreadCount = conversation.unreadCount
-    this.conversationType = conversation.conversationType
-    this.target = conversation.target
+  // @observable
+  // uiList = []
+  constructor(username) {
+    this.username = username
+
   }
+
+  @computed
+  get uiList() {
+    return this.list.map((d, i) => this.changeModel(d))
+  }
+
+  // constructor(conversation) {
+  //   console.log(conversation)
+  //   this.title = conversation.title
+  //   this.latestMessage = conversation.latestMessage
+  //   this.unreadCount = conversation.unreadCount
+  //   this.conversationType = conversation.conversationType
+  //   this.target = conversation.target
+  // }
 
   async createConversation() {
     const tran = Promisify(JMessage.createConversation)
-    const conversation = await tran({type: 'single', username: 'username', appKey: ''})
+    const conversation = await tran({type: 'single', username: this.username, appKey: ''})
     if (conversation || conversation === 0) {
       this.title = conversation.title
       this.latestMessage = conversation.latestMessage
-      unreadCount = conversation.unreadCount
+      this.unreadCount = conversation.unreadCount
       this.conversationType = conversation.conversationType
       this.target = conversation.target
     }
@@ -37,12 +49,23 @@ export default class User {
     const tran = Promisify(JMessage.getHistoryMessages)
     const res = await tran({
       type: 'single', username: this.username,
-      appKey: '', from: 0, limit: 10
+      appKey: '', from: 0, limit: 15
     })
     if (res || res === 0) {
-      this.list = res
+      this.list = this.list.concat(res)
+      console.log('getHistoryMessages list  ', res)
     }
     return res
+  }
+
+  addSysMsg(text) {
+    const sysMsg = {
+      id: 0,
+      text,
+      createTime: new Date().getTime(),
+      system: true
+    }
+    this.list.push(sysMsg)
   }
 
   async addTextMessage(text) {
@@ -50,6 +73,7 @@ export default class User {
     const res = await message.createSendMessage({text})
     if (res || res === 0) {
       message.sendTextMessage({text, id: Number(res.id)}).then()
+      this.list.unshift(res)
     }
     return res
   }
@@ -71,4 +95,63 @@ export default class User {
     }
     return res
   }
+
+  changeModel = (msg) => {
+    const {
+      id,
+      type,
+      from, // : UserInfo,                 // 消息发送者对象
+      target, // : UserInfo / GroupInfo,   // 消息接收者对象
+      createTime, // : number,             // 发送消息时间
+      extras, // : object                  // 附带的键值对
+      // 文本信息
+      text, // : string,                   // 消息内容
+      // 图片信息
+      thumbPath, // : string              // 图片的缩略图路径
+      // 语音信息
+      path, // : string,                   // 语音文件路径
+      duration, // : number                // 语音时长，单位秒
+      // 地址信息
+      address, // : string,                // 详细地址
+      longitude, // : number,              // 经度
+      latitude, // : number,               // 纬度
+      scale, // :number                    // 地图缩放比例
+      // 文件信息
+      fileName, // : string                // 文件名
+      // 自定义信息
+      customObject, // : object            // 自定义键值对
+      // 事件信息
+      eventType, // : string,       // 'group_member_added' / 'group_member_removed' / 'group_member_exit'
+      usernames,
+      system
+    } = msg
+    const {username, nickname} = from ? from : {}
+    let UIMsg = {
+      _id: id,
+      text: text,
+      createdAt: new Date(createTime),
+      user: {
+        _id: username,
+        name: nickname,
+        avatar: 'https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png'
+      },
+      sent: false,
+      received: false,
+      image: thumbPath,
+      voicePath: path,
+      duration: duration,
+      location: longitude ? {
+        latitude: latitude,
+        longitude: longitude
+      } : null,
+      fileName: fileName,
+      extras: extras,
+      customObject: customObject,
+      eventType: eventType,
+      system: system !== null ? system : null
+    }
+
+    return UIMsg
+  }
+
 }
