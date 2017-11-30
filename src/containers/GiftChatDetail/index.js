@@ -39,11 +39,7 @@ export default class Example extends React.Component {
   }
 
   componentDidMount() {
-    this.conversation.getHistoryMessages().then(v => {
-      this.setState({
-        messages: this.conversation.uiList
-      })
-    })
+    this.conversation.getHistoryMessages().then()
   }
 
   componentWillMount() {
@@ -204,7 +200,7 @@ export default class Example extends React.Component {
         {...props}
         wrapperStyle={{
           left: {
-            backgroundColor: '#f0f0f0'
+            backgroundColor: '#ffffff'
           }
         }}
       />

@@ -65,7 +65,7 @@ public class AndroidBug5497Workaround {
     private int computeUsableHeight() {
         Rect r = new Rect();
         mChildOfContent.getWindowVisibleDisplayFrame(r);
-        return (r.bottom - r.top) + getVirtuakeyHight() - getStatusHeight(activity);
+        return (r.bottom - r.top) + getVirtuakeyHight() - getStatusHeight(activity)+6;
     }
 
     private int getVirtuakeyHight() {

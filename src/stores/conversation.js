@@ -2,7 +2,7 @@ import {observable, autorun, computed} from 'mobx'
 import Message from './message'
 import JMessage from 'jmessage-react-plugin'
 
-export default class User {
+export default class Conversation {
   title  // : string,                  // 会话标题
   latestMessage  // : Message,         // 最近的一条消息对象
   unreadCount  // : number,            // 未读消息数
@@ -16,6 +16,17 @@ export default class User {
   constructor(username) {
     this.username = username
 
+  }
+
+  createConversationFromList = (conversation) => {
+    const {title, latestMessage, unreadCount, conversationType, target} = conversation
+    const {username, nickname} = target
+    this.username = username
+    this.title = title
+    this.latestMessage = latestMessage
+    this.unreadCount = unreadCount
+    this.conversationType = conversationType
+    this.target = target
   }
 
   @computed
@@ -66,6 +77,14 @@ export default class User {
       system: true
     }
     this.list.push(sysMsg)
+  }
+
+  clearList = () => {
+    this.list = []
+  }
+
+  receiveMsg = (msg) => {
+    this.list.unshift(msg)
   }
 
   async addTextMessage(text) {

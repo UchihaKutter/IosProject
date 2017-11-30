@@ -36,12 +36,13 @@ export default class Page extends Component {
     this.props.conversationList.getList().then()
   }
 
-  gotoChatDetail = () => {
-    this.props.navigation.navigate('ChatDetail')
+  gotoChatDetail = (item) => {
+    item.clearList()
+    this.props.navigation.navigate('GiftChatDetail', {conversation: item})
   }
 
   renderItem = ({index, item}) => {
-    return (<Item data={item}/>)
+    return (<Item data={item} onPress={() => this.gotoChatDetail(item)}/>)
   }
 
   render() {
@@ -67,6 +68,7 @@ class Item extends Component {
   }
 
   render() {
+    console.log('chatlist this.props.data   ', this.props.data)
     const {
       title,                  // 会话标题
       latestMessage,         // 最近的一条消息对象
@@ -80,7 +82,7 @@ class Item extends Component {
     const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
       : <Image style={[styles.image]} source={{uri: this.avatarThumbPath}}/>
     return (
-      <TouchableOpacity style={styles.item} onPress={this.gotoChatDetail}>
+      <TouchableOpacity style={styles.item} onPress={this.props.onPress}>
         <View style={{padding: 5}}>
           <Badge style={{position: 'absolute', top: 2, right: 0}} minWidth={12} minHeight={12}
                  textStyle={{

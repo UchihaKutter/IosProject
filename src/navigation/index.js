@@ -34,6 +34,11 @@ const {
   NewFriend
 } = FriendList
 
+const {
+  ContactNotifyAction,
+  MsgNotifyAction
+} = EventActions
+
 // const AppNavigator = StackNavigator(AppRouteConfigs);
 
 // const navReducer = (state, action) => {
@@ -96,12 +101,12 @@ class Root extends React.Component {
   listener = (event) => {
     // 回调参数 event 为好友事件
     console.log('event ', event)
-    EventActions.ContactNotifyAction(event, this.navigatorRef)
+    ContactNotifyAction(event, this.navigatorRef)
   }
 
   msgListener = (msg) => {
     console.log('msg ', msg)
-    EventActions.MsgNotifyAction(msg, Navigator)
+    MsgNotifyAction(msg)
 
   }
 
@@ -230,7 +235,7 @@ const RootNavigator = (login = false) => {
       screen: NewFriend
     }
   }, {
-    initialRouteName: 'Login',
+    initialRouteName: login ? 'Home' : 'Login',
     navigationOptions: navigationOptions
   })
 }

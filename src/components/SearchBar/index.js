@@ -13,6 +13,7 @@ import Icon from '../Icon'
 const {FontAwesomeIcon} = Icon
 
 export default class Com extends PureComponent {
+  text = '15880133505'
 
   state = {
     isFocus: false

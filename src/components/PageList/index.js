@@ -26,7 +26,7 @@ class PageList extends React.Component {
   }
 
   render() {
-    const list = this.store.list
+    const list = this.store.list.slice(0)
     console.log('PageList comp ', list)
     return (
       <View>
