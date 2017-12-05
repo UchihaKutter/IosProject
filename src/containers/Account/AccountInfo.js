@@ -108,7 +108,7 @@ export default class App extends Component<{}> {
   render() {
     console.log('AccountInfo render')
     const {navigation} = this.props
-    const {username, nickname, gender, avatarThumbPath} = this.props.user.userInfo
+    const {username, nickname, gender avatarThumbPath} = this.props.user.userInfo ? this.props.user.userInfo : {}
     console.log('avatarThumbPath: ', avatarThumbPath)
     const icon = avatarThumbPath === '' ? <FontAwesomeIcon size={44} name='user-circle-o'/>
       : <Image style={styles.image} resizeMode={'cover'} source={{uri: avatarThumbPath}}/>

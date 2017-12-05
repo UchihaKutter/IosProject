@@ -115,6 +115,14 @@ export default class Conversation {
     return res
   }
 
+  updateLastMsg = (msg) => {
+    const id = msg.extras.chatId
+    if (!msg || id !== this.id) {
+      return
+    }
+    this.latestMessage = msg
+  }
+
   changeModel = (msg) => {
     const {
       id,
