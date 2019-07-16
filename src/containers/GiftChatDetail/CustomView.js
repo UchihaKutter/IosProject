@@ -62,6 +62,7 @@ CustomView.defaultProps = {
 
 CustomView.propTypes = {
   currentMessage: PropTypes.object,
+
   // containerStyle: ViewPropTypes.style,
   // mapViewStyle: ViewPropTypes.style
 }
