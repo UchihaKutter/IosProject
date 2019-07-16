@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+
 import React from 'react'
 import {
   Modal,
@@ -8,7 +8,7 @@ import {
   ViewPropTypes,
   Text
 } from 'react-native'
-
+import PropTypes from 'prop-types'
 import CameraRollPicker from 'react-native-camera-roll-picker'
 import NavBar, {NavButton, NavButtonText, NavTitle} from 'react-native-nav'
 
@@ -200,7 +200,7 @@ CustomActions.propTypes = {
   onSend: PropTypes.func,
   options: PropTypes.object,
   icon: PropTypes.func,
-  containerStyle: ViewPropTypes.style,
-  wrapperStyle: ViewPropTypes.style,
-  iconTextStyle: Text.propTypes.style
+  // containerStyle: ViewPropTypes.style,
+  // wrapperStyle: ViewPropTypes.style,
+  // iconTextStyle: Text.propTypes.style
 }
